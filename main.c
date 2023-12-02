@@ -5,6 +5,7 @@
 
 /* Local Files */
 #include "chip8.h"
+#include "chip8_diss.h"
 
 /* SDL Variables */
 SDL_Window   *window      = NULL;

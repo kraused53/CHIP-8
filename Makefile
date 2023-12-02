@@ -23,7 +23,7 @@ LIBS = -lSDL2
 GCC = gcc -g $(WARNING) $(ERROR)
 
 # List of all c++ source files for this project
-SRCS = main.c chip8.c
+SRCS = main.c chip8.c chip8_diss.c
 
 # Generates an object file for each given source file
 OBJS = $(SRCS:%.c=%.o)
@@ -34,6 +34,9 @@ $(TARGET): $(OBJS)
 
 run: $(TARGET)
 	./$(TARGET)
+
+IBM: $(TARGET)
+	./$(TARGET) ./roms/IBM.ch8
 
 # Make a rule for converting source files into object files
 .c.o:

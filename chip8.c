@@ -21,10 +21,6 @@ void init_chip8( chip8_t *c ) {
     for( index = 0; index < GFX_SIZE; index++ ) {
         c->GFX[ index ] = 0x00;
     }
-    c->GFX[ 0 ] = 0xFF;
-    c->GFX[ 63 ] = 0xFF;
-    c->GFX[ 64*31 ] = 0xFF;
-    c->GFX[ 64*31 + 63 ] = 0xFF;
 
     // Trigger a screen update
     c->SU = 0x01;
