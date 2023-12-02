@@ -23,7 +23,7 @@ LIBS = -lSDL2
 GCC = gcc -g $(WARNING) $(ERROR)
 
 # List of all c++ source files for this project
-SRCS = main.c
+SRCS = main.c chip8.c
 
 # Generates an object file for each given source file
 OBJS = $(SRCS:%.c=%.o)
