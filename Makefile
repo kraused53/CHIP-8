@@ -13,7 +13,7 @@ WARNING = -Wall -Wshadow --pedantic
 
 # External Libraries
 #
-LIBS = 
+LIBS = -lSDL2
 
 # Build the C Compiler Call
 #	gcc			-> C Compiler
