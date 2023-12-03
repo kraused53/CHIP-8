@@ -1,3 +1,5 @@
 chip
 *.o
 roms/
+.vscode/
+.vscode/settings.json
