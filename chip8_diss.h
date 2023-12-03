@@ -4,5 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#include "chip8.h"
+
 /* Function Prototypes */
-void chip8_diss( uint16_t PC, uint16_t op );
+void diss_step_chip8( chip8_t *c );
+void diss_chip8( chip8_t *c, uint8_t len );
