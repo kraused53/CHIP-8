@@ -5,13 +5,13 @@
 
 /* Local Files */
 #include "chip8.h"
-#include "chip8_diss.h"
+
 
 /* SDL Variables */
 SDL_Window   *window      = NULL;
 SDL_Renderer *renderer    = NULL;
 SDL_Event     event;
-uint8_t       pixel_scale = 8;
+uint8_t       pixel_scale = 16;
 
 /* Function Prototypes */
 uint8_t init_sdl( uint8_t s );
@@ -20,21 +20,58 @@ void    update_graphics( chip8_t c, uint8_t s );
 
 int main( int argc, char **argv ) {
     
+    /* Check for rom file */
+    if( argc != 2 ) {
+        printf( "Please provide the path to a chip 8 rom...\r\n" );
+        return EXIT_FAILURE;
+    }
+
     /* Chip 8 Setup */
     chip8_t cpu;
     init_chip8( &cpu );
 
     /* Load ROM */
+    // Attempt to open the given rom
+    FILE *rom;
+    if( ( rom = fopen( argv[ 1 ], "r" ) ) == NULL ) {
+        exit_chip8( &cpu );
+        printf( "Could not open the rom file!\r\n" );
+        printf( "%s\r\n", argv[ 1 ] );
+        return EXIT_FAILURE;
+    }
+
+    // Attempt to load the rom file
+    if( load_rom( &cpu, rom ) != 0 ) {
+        exit_chip8( &cpu );
+        return EXIT_FAILURE;
+    }
+
+    /*
+    uint16_t len;
+    fseek( rom, 0, SEEK_END );
+    len = ftell( rom );
+    rewind( rom );
+    */
+    
+    /* Disassemble */
+    //diss_chip8( &cpu, len );
+    
+    fclose( rom );
 
     /* Set up SDL */
+    
     // Try to initialize SDL
+       
     if( init_sdl( pixel_scale ) != 0 ) {
         // Free memory and exit subsystems
         exit_sdl();
         return EXIT_FAILURE;
     }
+   
+    
 
     /* System Loop */
+    
     uint8_t quit = 0;
     while( !quit ) {
         // Poll SDL System Events
@@ -69,6 +106,10 @@ int main( int argc, char **argv ) {
 
             }
         }
+
+        step_chip8( &cpu );
+        
+
         // If cpu flagged graphics update
         if( cpu.SU ) {
             // Clear flag
@@ -77,6 +118,7 @@ int main( int argc, char **argv ) {
             update_graphics( cpu, pixel_scale );
         }
     }
+    
 
     exit_chip8( &cpu );
     exit_sdl();
@@ -151,8 +193,8 @@ void update_graphics( chip8_t c, uint8_t s ) {
             rect.x = col * s;
             
             if( c.GFX[ ( CHIP8_W * row ) + col ] ) {
-                // White
-                SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+                // Green
+                SDL_SetRenderDrawColor( renderer, 0x00, 0xFF, 0x00, 0xFF );
             }else {
                 // Black
                 SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0x00, 0xFF );
@@ -160,7 +202,18 @@ void update_graphics( chip8_t c, uint8_t s ) {
 
             // Draw Pixel
             SDL_RenderFillRect( renderer, &rect );
+            
+            // Draw Pixel Outline
+            if( s >= 8 ) {
+                // Black
+                SDL_SetRenderDrawColor( renderer, 0x00, 0x00, 0x00, 0xFF );
+                SDL_RenderDrawRect( renderer, &rect );
+            }
+
         }
     }
+
+
+
     SDL_RenderPresent( renderer );
 }

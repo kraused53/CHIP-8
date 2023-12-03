@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 
 /* Memory Addresses */
 #define MEM_SIZE    0x1000
@@ -45,10 +47,19 @@ typedef struct {
     /* Flags */
     // Use to trigger a graphics window update
     uint8_t SU;
+    // Used to halt chip 8 programs
+    // Will be set if an infinite loop is detected
+    // Will no halt SDL framework
+    uint8_t halted;
 
 }chip8_t;
+
+#include "chip8_diss.h"
 
 /* Function prototypes */
 void    init_chip8( chip8_t *c );
 void    exit_chip8( chip8_t *c );
 uint8_t load_rom( chip8_t *c, FILE *rom );
+void    step_chip8( chip8_t *c );
+void    clear_gfx( chip8_t *c );
+void draw_object( chip8_t *c, uint8_t x, uint8_t y, uint8_t n );
